@@ -1,7 +1,6 @@
-import axios from 'axios'
+import axios from 'axios';
 
-
-const API = axios.create({ baseURL: 'http://localhost:5000' });
+const API = axios.create({ baseURL: 'https://memist.onrender.com' });
 
 export const getMessages = (id) => API.get(`/message/${id}`);
 

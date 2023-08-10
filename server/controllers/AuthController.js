@@ -123,7 +123,7 @@ export const forgotPassword = async (req, res) => {
 				from: process.env.EMAIL,
 				to: email,
 				subject: 'Password Reset',
-				html: `Click <a href="http://localhost:3000/resetPassword?token=${token}">here</a> to reset your password.`,
+				html: `Click <a href="https://memist.vercel.app/resetPassword?token=${token}">here</a> to reset your password.`,
 			};
 
 			transporter.sendMail(mailOptions, (error, info) => {

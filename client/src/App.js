@@ -15,7 +15,7 @@ function App() {
 			className="App"
 			style={{
 				height:
-					window.location.href === 'http://localhost:3000/chat'
+					window.location.href === 'https://memist.vercel.app/chat'
 						? 'calc(100vh - 2rem)'
 						: 'auto',
 			}}
