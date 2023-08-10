@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { userChats } from "../../api/ChatRequests";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
+import { Button } from "@mantine/core";
 
 const Chat = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,11 @@ const Chat = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [sendMessage, setSendMessage] = useState(null);
+  const [show, setShow] = useState(false);
   const [receivedMessage, setReceivedMessage] = useState(null);
+  const [isMobileScreen, setIsMobileScreen] = useState(
+    window.innerWidth <= 880
+  );
   // Get the chat in chat section
   useEffect(() => {
     const getChats = async () => {
@@ -32,6 +37,18 @@ const Chat = () => {
     getChats();
   }, [user._id]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileScreen(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   // Connect to Socket.io
   useEffect(() => {
     socket.current = io("ws://localhost:8800");
@@ -43,19 +60,17 @@ const Chat = () => {
 
   // Send Message to socket server
   useEffect(() => {
-    if (sendMessage!==null) {
-      socket.current.emit("send-message", sendMessage);}
+    if (sendMessage !== null) {
+      socket.current.emit("send-message", sendMessage);
+    }
   }, [sendMessage]);
-
 
   // Get the message from socket server
   useEffect(() => {
     socket.current.on("recieve-message", (data) => {
-      console.log(data)
+      console.log(data);
       setReceivedMessage(data);
-    }
-
-    );
+    });
   }, []);
 
   const checkOnlineStatus = (chat) => {
@@ -63,46 +78,109 @@ const Chat = () => {
     const online = onlineUsers.find((user) => user.userId === chatMember);
     return online ? true : false;
   };
-
+  const handleMobile = (chat) => {
+    setCurrentChat(chat);
+    setShow(true);
+  };
   return (
-    <div className="Chat">
-      {/* Left Side */}
-      <div className="Left-side-chat">
-        <LogoSearch />
-        <div className="Chat-container">
-          <h2>Chats</h2>
-          <div className="Chat-list">
-            {chats.map((chat) => (
-              <div
-                onClick={() => {
-                  setCurrentChat(chat);
-                }}
-              >
-                <Conversation
-                  data={chat}
-                  currentUser={user._id}
-                  online={checkOnlineStatus(chat)}
-                />
+    <>
+      {!isMobileScreen ? (
+        <div className="Chat">
+          {/* Left Side */}
+          <div className="Left-side-chat">
+            <LogoSearch />
+            <div className="Chat-container">
+              <h2>Chats</h2>
+              <div className="Chat-list">
+                {chats.map((chat) => (
+                  <div
+                    onClick={() => {
+                      setCurrentChat(chat);
+                    }}
+                  >
+                    <Conversation
+                      data={chat}
+                      currentUser={user._id}
+                      online={checkOnlineStatus(chat)}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+          </div>
+
+          {/* Right Side */}
+
+          <div className="Right-side-chat">
+            <div style={{ width: "20rem", alignSelf: "flex-end" }}>
+              <NavIcons />
+            </div>
+            <ChatBox
+              chat={currentChat}
+              currentUser={user._id}
+              setSendMessage={setSendMessage}
+              receivedMessage={receivedMessage}
+            />
           </div>
         </div>
-      </div>
+      ) : (
+        <>
+          {/* <div className="Chat"> */}
+          {/* Left Side */}
+          {/* <div>
+          
+            <div>
+              <div
+                style={{
+                  width: "100%",
+                  alignSelf: "flex-center",
+                  marginBottom: "1rem",
+                }}
+              >
+                <NavIcons />
+              </div>
+            </div>
+          </div> */}
+          {/* </div> */}
+          {!show ? (
+            <div className="Chat-list">
+              <div className="Chat-container">
+                <h2>Chats</h2>
 
-      {/* Right Side */}
+                <Button onClick={() => setShow(true)}>allow</Button>
 
-      <div className="Right-side-chat">
-        <div style={{ width: "20rem", alignSelf: "flex-end" }}>
-          <NavIcons />
-        </div>
-        <ChatBox
-          chat={currentChat}
-          currentUser={user._id}
-          setSendMessage={setSendMessage}
-          receivedMessage={receivedMessage}
-        />
-      </div>
-    </div>
+                <div className="Chat-list">
+                  {chats.map((chat) => (
+                    <div
+                      onClick={() => {
+                        setCurrentChat(chat);
+                      }}
+                    >
+                      <Conversation
+                        data={chat}
+                        currentUser={user._id}
+                        online={checkOnlineStatus(chat)}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <Button onClick={() => setShow(false)}>Back</Button>
+
+              <ChatBox
+                chat={currentChat}
+                currentUser={user._id}
+                setSendMessage={setSendMessage}
+                receivedMessage={receivedMessage}
+              />
+            </div>
+          )}
+        </>
+      )}
+    </>
   );
 };
 

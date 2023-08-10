@@ -16,10 +16,10 @@ const Post = ({ data }) => {
 
   const handleLike = () => {
     likePost(data._id, user._id);
-    
     setLiked((prev) => !prev);
     liked ? setLikes((prev) => prev - 1) : setLikes((prev) => prev + 1);
   };
+
   console.log(data._id, user._id,"meeeee")
 
   const handleComment = () => {
@@ -30,8 +30,10 @@ const Post = ({ data }) => {
   const handleAddComment = async () => {
     if (newComment.trim() !== "") {
       try {
+        // Call the API function to add a comment
         await addCommentToPost(data._id, user._id, newComment);
 
+        // Clear the newComment state and hide the comment input
         setNewComment("");
         setShowComment(false);
 
@@ -39,6 +41,7 @@ const Post = ({ data }) => {
         // For example: fetchUpdatedPostData(data._id);
       } catch (error) {
         console.error("Error adding comment:", error);
+        // Handle error cases if needed
       }
     }
   };
@@ -84,6 +87,15 @@ const Post = ({ data }) => {
       )}
 
       {console.log(newComment)}
+
+      {/* Render comments */}
+      {data.comments.map((comment, index) => (
+        <div key={index} className="comment">
+          <span>
+            <b>{comment.user}</b>: {comment.text}
+          </span>
+        </div>
+      ))}
 
         <div className="detail">
         <span>

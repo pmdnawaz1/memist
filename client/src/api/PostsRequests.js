@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://localhost:5000' });
+const API = axios.create({ baseURL: 'https://memist.onrender.com' });
 
 API.interceptors.request.use((req) => {
 	if (localStorage.getItem('profile')) {
@@ -24,9 +24,9 @@ export const addCommentToPost = async (postId, userId, commentText) => {
 			commentText,
 		});
 
-		return response;
+		return response.data; // Return the response data, not the entire response
 	} catch (error) {
 		console.error('Error adding comment:', error);
-		throw error;
+		throw error; // Re-throw the error for handling at the caller level
 	}
 };
