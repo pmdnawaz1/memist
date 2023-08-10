@@ -120,3 +120,28 @@ export const getTimelinePosts = async (req, res) => {
 		res.status(500).json(error);
 	}
 };
+
+export const addCommentToPost = async (req, res) => {
+	const { userId, comment, postId } = req.body;
+	console.log('meeeeee');
+	try {
+		const post = await PostModel.findById(postId);
+
+		if (!post) {
+			return res.status(404).json('Post not found');
+		}
+
+		const newComment = {
+			userId,
+			text: comment,
+			createdAt: new Date(),
+		};
+
+		post.comments.push(newComment);
+		await post.save();
+
+		res.status(201).json('Comment added successfully');
+	} catch (error) {
+		res.status(500).json(error);
+	}
+};

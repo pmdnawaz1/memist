@@ -4,7 +4,7 @@ import Comment from "../../img/comment.png";
 import Share from "../../img/share.png";
 import Heart from "../../img/like.png";
 import NotLike from "../../img/notlike.png";
-import { likePost } from "../../api/PostsRequests";
+import { likePost, addCommentToPost } from "../../api/PostsRequests"; // Update the import
 import { useSelector } from "react-redux";
 
 const Post = ({ data }) => {
@@ -12,20 +12,35 @@ const Post = ({ data }) => {
   const [liked, setLiked] = useState(data.likes.includes(user._id));
   const [likes, setLikes] = useState(data.likes.length);
   const [showComment, setShowComment] = useState(false);
-  const [showVideo, setShowVideo] = useState(false);
+  const [newComment, setNewComment] = useState(""); // State for the new comment
 
   const handleLike = () => {
     likePost(data._id, user._id);
+    
     setLiked((prev) => !prev);
     liked ? setLikes((prev) => prev - 1) : setLikes((prev) => prev + 1);
   };
+  console.log(data._id, user._id,"meeeee")
 
   const handleComment = () => {
     setShowComment(!showComment);
   };
 
-  const handleVideoClick = () => {
-    setShowVideo(!showVideo);
+  // Handle adding a new comment
+  const handleAddComment = async () => {
+    if (newComment.trim() !== "") {
+      try {
+        await addCommentToPost(data._id, user._id, newComment);
+
+        setNewComment("");
+        setShowComment(false);
+
+        // Optionally, you can fetch updated post data here
+        // For example: fetchUpdatedPostData(data._id);
+      } catch (error) {
+        console.error("Error adding comment:", error);
+      }
+    }
   };
 
   return (
@@ -37,22 +52,7 @@ const Post = ({ data }) => {
         />
       )}
 
-      {data.video && !showVideo && (
-        <div className="videoThumbnail" onClick={handleVideoClick}>
-          <img src={process.env.REACT_APP_PUBLIC_FOLDER + data.video} alt="" />
-          <div className="playButton"></div>
-        </div>
-      )}
-
-      {data.video && showVideo && (
-        <video controls onClick={handleVideoClick}>
-          <source
-            src={process.env.REACT_APP_PUBLIC_FOLDER + data.video}
-            type="video/mp4"
-          />
-          Your browser does not support the video tag.
-        </video>
-      )}
+      {/* ... (rest of your code) ... */}
 
       <div className="postReact">
         <img
@@ -70,14 +70,28 @@ const Post = ({ data }) => {
         {likes} likes
       </span>
 
-      {showComment && <input type="text" placeholder="Add a comment" />}
+      {/* Render comment input */}
+      {showComment && (
+        <div>
+          <input
+            type="text"
+            placeholder="Add a comment"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+          />
+          <button onClick={handleAddComment}>Post</button>
+        </div>
+      )}
 
-      <div className="detail">
+      {console.log(newComment)}
+
+        <div className="detail">
         <span>
           <b>{data.name} </b>
         </span>
         <span>{data.desc}</span>
       </div>
+
     </div>
   );
 };
