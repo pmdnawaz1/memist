@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'https://memist.onrender.com' });
+const API = axios.create({ baseURL: 'http://memist.onrender.com' });
 
 export const logIn = (formData) => API.post('/auth/login', formData);
 
