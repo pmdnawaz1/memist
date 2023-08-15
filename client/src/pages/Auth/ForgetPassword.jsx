@@ -1,29 +1,17 @@
 import React, { useState } from 'react';
 import Auth from './Auth';
-import{forgotPassword} from '../../api/AuthRequests';
-import { useNavigate } from 'react-router-dom';
 import './forgetpassword.css';
 const ForgotPassword = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState('');
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await forgotPassword({
-        email
-      });
-      console.log(response);
-      alert("Reset link has been sent to the email");
-      navigate('/');
-      // setShowDialog(true);
-    } catch (error) {
-      console.error(error); 
-    }
+  const handleResetPassword = () => {
+    // Logic to initiate the password reset process
+    // You can add your API calls or other necessary code here
+    console.log(`Initiating password reset for email: ${email}`);
   };
 
   return (
@@ -48,7 +36,7 @@ const ForgotPassword = () => {
         </div>
         <button
           className="w-full px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
-          onClick={handleSubmit}
+          onClick={handleResetPassword}
         >
           Reset Password
         </button>

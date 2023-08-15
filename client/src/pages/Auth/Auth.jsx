@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import "./Auth.css";
-import Logo from "../../img/logo2.png";
-import { logIn, signUp } from "../../actions/AuthActions.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import ForgotPassword from "./ForgetPassword";
+import { signUp } from "../../actions/AuthActions.js";
+import Logo from "../../img/logo2.png";
+import * as AuthApi from "../../api/AuthRequests";
+import "./Auth.css";
 const Auth = () => {
   const initialState = {
     firstname: "",
@@ -42,41 +42,54 @@ const Auth = () => {
     e.preventDefault();
     setError(""); // Clear any previous error message before each new submission
 
-if (isSignUp) {
+    if (isSignUp) {
       if (data.password === data.confirmpass) {
         // If the password and confirm password match, proceed with sign-up
         dispatch(signUp(data, navigate));
-} else {
-    setConfirmPass(false);
-}
-} else {
-    try {
-        await dispatch(logIn(data, navigate));
-      } catch (error) {
-        if (error.response) {
-          // Error response from the server (e.g., 400 Bad Request)         
-          if (error.response.status === 404) {
-            if (error.response.data.message === "wrong_username") {
-              setError("Incorrect username. Please try again.");
-            } else if (error.response.data.message === "wrong_password") {
-              setError("Incorrect password. Please try again.");
-            } else if (error.response.data.message === "wrong_password_username") {
-              setError("Incorrect username or password. Please try again.");
+      } else {
+        setConfirmPass(false);
+      }
+    } else {
+      try {
+        let formData = data;
+        dispatch({ type: "AUTH_START" });
+        try {
+          const { data } = await AuthApi.logIn(formData);
+          console.log(data, "sda");
+          dispatch({ type: "AUTH_SUCCESS", data: data });
+          navigate("../home", { replace: true });
+        } catch (error) {
+          if (error.response) {
+            console.log("sssssss", error);
+            // Error response from the server (e.g., 400 Bad Request)
+            if (error.response.status === 400) {
+              if (error.response.data.message === "wrong_username") {
+                setError("Incorrect username. Please try again.");
+              } else if (error.response.data.message === "wrong password") {
+                setError("Incorrect password. Please try again.");
+              } else if (
+                error.response.data.message === "wrong_password_username"
+              ) {
+                setError("Incorrect username or password. Please try again.");
+              } else {
+                setError("An error occurred. Please try again later.");
+              }
             } else {
               setError("An error occurred. Please try again later.");
             }
           } else {
             setError("An error occurred. Please try again later.");
           }
-        } else {
-          setError("An error occurred. Please try again later.");
+          dispatch({ type: "AUTH_FAIL", error });
         }
+        // const log = await dispatch(logIn(data, navigate));
+        // console.log("log", log);
+      } catch (error) {
+        // console.log(error);
       }
     }
   };
-console.log(
-  "error",error
-)
+  console.log("error", error);
   return (
     <div className="Auth">
       {/* left side */}
@@ -188,16 +201,18 @@ console.log(
               {isSignUp
                 ? "Already have an account? Login"
                 : "Don't have an account? Sign up"}
-            </span>          
-            <button className="button infoButton" type="Submit" disabled={loading}>
+            </span>
+            <button
+              className="button infoButton"
+              type="Submit"
+              disabled={loading}
+            >
               {loading ? "Loading..." : isSignUp ? "Sign Up" : "Login"}
             </button>
           </div>
         </form>
       </div>
-      {!isSignUp&&
-      <a href="/forgetPassword">Forget Password </a>
-}
+      {!isSignUp && <a href="/forgetPassword">Forget Password </a>}
     </div>
   );
 };

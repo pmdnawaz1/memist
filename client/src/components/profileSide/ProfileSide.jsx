@@ -25,7 +25,7 @@ const ProfileSide = () => {
     <div className="ProfileSide">
       {isMobileScreen ? (
         <div>
-          <div className='mt-8'>
+          <div className='mt-8 '>
           <ProfileCard location="homepage" />
           </div>
           <FollowersCard />
@@ -35,7 +35,7 @@ const ProfileSide = () => {
           <div className='logo mb-5'>
           <LogoSearch />
           </div>
-          <ProfileCard location="homepage" />
+          <ProfileCard location="homepage "  />
           <FollowersCard />
         </div>
       )}

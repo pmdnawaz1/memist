@@ -158,6 +158,33 @@ export const getUserByEmail = async (req, res) => {
 	}
 };
 
+export const getFollowers = async (req, res) => {
+	const id = req.params.id;
+
+	try {
+		const user = await UserModel.findById(id);
+		const followers = await UserModel.find({ _id: { $in: user.followers } });
+
+		res.status(200).json(followers);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json(error);
+	}
+};
+
+export const getFollowing = async (req, res) => {
+	const id = req.params.id;
+
+	try {
+		const user = await UserModel.findById(id);
+		const following = await UserModel.find({ _id: { $in: user.following } });
+
+		res.status(200).json(following);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json(error);
+	}
+};
 export const editCustomerData = async (req, res) => {
 	const id = req.params.id;
 	const newData = req.body;
@@ -172,6 +199,43 @@ export const editCustomerData = async (req, res) => {
 			res.status(404).json('No such User');
 		}
 	} catch (error) {
+		res.status(500).json(error);
+	}
+};
+
+// Add approval boolean in post API
+export const approvePost = async (req, res) => {
+	const postId = req.params.id;
+
+	try {
+		const post = await PostModel.findByIdAndUpdate(
+			postId,
+			{ approval: true },
+			{ new: true }
+		);
+		if (post) {
+			res.status(200).json('Post approved!');
+		} else {
+			res.status(404).json('No such post');
+		}
+	} catch (error) {
+		res.status(500).json(error);
+	}
+};
+
+// Get followers for all user profiles
+export const getAllFollowers = async (req, res) => {
+	try {
+		const users = await UserModel.find();
+		const followers = users.map((user) => ({
+			_id: user._id,
+			username: user.username,
+			followers: user.followers.length,
+		}));
+
+		res.status(200).json(followers);
+	} catch (error) {
+		console.error(error);
 		res.status(500).json(error);
 	}
 };

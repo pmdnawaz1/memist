@@ -39,17 +39,24 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="Home ml-6">
+    <div className={isMobileScreen ? "" : "Home ml-6"}>
       {isMobileScreen ? (
         // Mobile view
         <div className="mobile-view">
-          <div className={`button-container ${buttonContainerVisible ? "active" : ""}`}>
+          <div
+            className={`button-container ${
+              buttonContainerVisible ? "active" : ""
+            }`}
+          >
             <div className="mb-5">
               <NavIcons onClick={toggleButtonContainer} />
             </div>
             {buttonContainerVisible && (
               <div className="button-options-overlay">
-                <button className="button-option" onClick={() => toggleActiveComponent("post")}>
+                <button
+                  className="button-option"
+                  onClick={() => toggleActiveComponent("post")}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"
@@ -65,7 +72,10 @@ const Home = () => {
                     />
                   </svg>
                 </button>
-                <button className="button-option" onClick={() => toggleActiveComponent("post")}>
+                <button
+                  className="button-option"
+                  onClick={() => toggleActiveComponent("post")}
+                >
                   Post
                 </button>
               </div>

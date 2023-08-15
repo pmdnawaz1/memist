@@ -1,12 +1,8 @@
-import React, { useState, useRef } from "react";
-import "./PostShare.css";
-import { UilScenery } from "@iconscout/react-unicons";
-import { UilPlayCircle } from "@iconscout/react-unicons";
-import { UilLocationPoint } from "@iconscout/react-unicons";
-import { UilSchedule } from "@iconscout/react-unicons";
-import { UilTimes } from "@iconscout/react-unicons";
+import { UilPlayCircle, UilScenery, UilTimes } from "@iconscout/react-unicons";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadImage, uploadPost } from "../../actions/UploadAction";
+import "./PostShare.css";
 
 const PostShare = () => {
   const dispatch = useDispatch();
@@ -86,11 +82,21 @@ const PostShare = () => {
             Photo
           </div>
 
-          <div className="option" style={{ color: "var(--video)" }}
-           onClick={() => imageRef.current.click()}>
-            
+          <div
+            className="option"
+            style={{ color: "var(--video)" }}
+            onClick={() => imageRef.current.click()}
+          >
             <UilPlayCircle />
             Video
+          </div>
+          <div
+            className="option"
+            style={{ color: "var(--location)" }}
+            onClick={() => imageRef.current.click()}
+          >
+            <UilScenery />
+            Gif
           </div>
           {/* <div className="option" style={{ color: "var(--location)" }}>
             <UilLocationPoint />
@@ -105,7 +111,7 @@ const PostShare = () => {
             onClick={handleUpload}
             disabled={loading}
           >
-            {loading ? "uploading" : "Share"}
+            {loading ? "uploading" : "Post"}
           </button>
 
           <div style={{ display: "none" }}>

@@ -1,78 +1,44 @@
-import React, { useState } from 'react';
-import { changePassword } from '../../api/AuthRequests';
-import { useNavigate } from 'react-router-dom';
-// import Dialog from '../Dialog/Dialog';
+import React from 'react';
 
 const PasswordandSecurity = () => {
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  // const [showDialog, setShowDialog] = useState(false);
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    const token = JSON.parse(localStorage.getItem('profile'))?.token;
-    try {
-      const response = await changePassword({
-        currentPassword,
-        newPassword,
-        token
-      });
-      console.log(response);
-      navigate('/');
-      // setShowDialog(true);
-    } catch (error) {
-      console.error(error); 
-    }
-  };
-
   return (
-    <div>
-  <h1 className='font-bold text-2xl'>Change Password:</h1>
-  Your password must be at least 6 digits and for more security use (@#!) symbols
-  <div>
-    <form className='m-' onSubmit={handleSubmit}>
-      <div>
-        <input
-          type='password'
-          placeholder='Current password'
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-          required
-          className='rounded-md py-2 px-3 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500'
-        />
+    <div className="p-4 md:p-8 lg:p-16">
+      <h1 className="font-bold text-xl md:text-2xl mb-4">Change Password:</h1>
+      <p className="text-sm md:text-base mb-4">
+        Your password must be at least 6 characters long and for more security, use symbols like @#!.
+      </p>
+      <div className="w-full md:w-2/3 lg:w-full mx-auto">
+        <form>
+          <div className="mb-4">
+            <input
+              className="w-full p-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:border-orange-500"
+              type="password"
+              placeholder="Current password"
+            />
+          </div>
+          <div className="mb-4">
+            <input
+              className="w-full p-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:border-orange-500"
+              type="password"
+              placeholder="New password"
+            />
+          </div>
+          <div className="mb-4">
+            <input
+              className="w-full p-2 border border-gray-300 rounded-md placeholder-gray-500 focus:outline-none focus:border-orange-500"
+              type="password"
+              placeholder="Confirm password"
+            />
+          </div>
+          <button
+            className="w-full bg-orange-300 text-white py-2 rounded-md hover:bg-orange-600 transition duration-300"
+            type="submit"
+          >
+            Update Password
+          </button>
+        </form>
       </div>
-      <div>
-        <input
-          type='password'
-          placeholder='New Password'
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-          className='rounded-md py-2 px-3 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500'
-        />
-      </div>
-      <div>
-        <input
-          type='password'
-          placeholder='Confirm password'
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-          className='rounded-md py-2 px-3 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500'
-        />
-      </div>
-      <button
-        type='submit'
-        className='rounded-md bg-blue-500 text-white py-2 px-4 mt-3 hover:bg-blue-600 focus:outline-none focus:bg-blue-600'
-      >
-        Change
-      </button>
-    </form>
-  </div>
-</div>
+    </div>
   );
 };
 

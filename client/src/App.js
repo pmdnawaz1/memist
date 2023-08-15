@@ -4,24 +4,28 @@ import Home from './pages/Home';
 import Auth from './pages/Auth/Auth';
 import ForgotPassword from './pages/Auth/ForgetPassword';
 import Profile from './pages/Profile/Profile';
-import ResetPassword from './pages/ResetPassword';
 import { useSelector } from 'react-redux';
 import Chat from './pages/Chat/Chat';
+import UserProfile from './pages/UserProfile/Profile';
+import Following from './pages/FollwerPage';
+import LikePage from './pages/LikePage';
+import TrendingPosts from './pages/TrendingPosts';
+import Users from './components/User/Users';
 
 function App() {
 	const user = useSelector((state) => state.authReducer.authData);
 	return (
 		<div
 			className="App"
-			style={{
-				height:
-					window.location.href === 'https://memist.vercel.app/chat'
-						? 'calc(100vh - 2rem)'
-						: 'auto',
-			}}
+			// style={{
+			//   height:
+			//     window.location.href === "http://localhost:3000/chat"
+			//       ? "calc(100vh - 2rem)"
+			//       : "auto",
+			// }}
 		>
-			<div className="blur" style={{ top: '-18%', right: '0' }}></div>
-			<div className="blur" style={{ top: '36%', left: '-8rem' }}></div>
+			{/* <div className="blur" style={{ top: "-18%", right: "0" }}></div> */}
+			{/* <div className="blur" style={{ top: "36%", left: "-8rem" }}></div> */}
 			<Routes>
 				<Route
 					path="/"
@@ -30,6 +34,18 @@ function App() {
 				<Route
 					path="/home"
 					element={user ? <Home /> : <Navigate to="../auth" />}
+				/>
+				<Route
+					path="/following"
+					element={user ? <Following /> : <Navigate to="../auth" />}
+				/>
+				<Route
+					path="/like"
+					element={user ? <LikePage /> : <Navigate to="../auth" />}
+				/>
+				<Route
+					path="/trendingPost"
+					element={user ? <TrendingPosts /> : <Navigate to="../auth" />}
 				/>
 				<Route
 					path="/auth"
@@ -44,6 +60,10 @@ function App() {
 					element={user ? <Profile /> : <Navigate to="../auth" />}
 				/>
 				<Route
+					path="/userProfile/:id"
+					element={user ? <UserProfile /> : <Navigate to="../auth" />}
+				/>
+				<Route
 					path="*"
 					element={
 						<main style={{ padding: '1rem' }}>
@@ -56,10 +76,11 @@ function App() {
 					element={user ? <Chat /> : <Navigate to="../auth" />}
 				/>
 				<Route
-					path="/resetPassword"
-					element={user ? <Navigate to="../home" /> : <ResetPassword />}
+					path="/profile/:userId"
+					element={user ? <Users /> : <Navigate to="../auth" />}
 				/>
 			</Routes>
+			{/* <Users /> */}
 		</div>
 	);
 }
