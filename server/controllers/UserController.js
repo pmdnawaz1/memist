@@ -174,7 +174,7 @@ export const getFollowers = async (req, res) => {
 
 export const getFollowing = async (req, res) => {
 	const id = req.params.id;
-
+	console.log(id, 'id');
 	try {
 		const user = await UserModel.findById(id);
 		const following = await UserModel.find({ _id: { $in: user.following } });

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./FollowersCard.css";
 import FollowersModal from "../FollowersModal/FollowersModal";
-import { getAllUser } from "../../api/UserRequests";
+import { getAllUser, } from "../../api/UserRequests";
+
+
 import Users from "../User/Users";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";

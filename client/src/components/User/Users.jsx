@@ -6,9 +6,9 @@ const Users = ({ person, onClick }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`process.env.REACT_URL/${person.id}`);
-        const data = await response.json();
-        setUserData(data);
+        // const response = await fetch(`process.env.REACT_URL/${person.id}`);
+        // const data = await response.json();
+        setUserData();
       } catch (error) {
         console.error(error);
       }

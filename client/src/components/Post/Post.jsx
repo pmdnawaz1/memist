@@ -16,6 +16,7 @@ const Post = ({ data }) => {
   const [liked, setLiked] = useState(data.likes.includes(user._id));
   const [likes, setLikes] = useState(data.likes.length);
   const [showcomment, setcomment] = useState(false);
+
   // const [open, setOpen] = React.useState(false);
   // const handleOpen = () => setOpen(true);
   // const handleClose = () => setOpen(false);
@@ -55,7 +56,7 @@ const Post = ({ data }) => {
             src="https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg"
             alt=""
           />
-          <span>&nbsp;Samra</span>
+          <span>&nbsp;{user.firstname}</span>
         </a>
 
         <div className="postReact">
